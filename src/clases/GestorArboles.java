@@ -2,6 +2,7 @@ package clases;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 /*import java.sql.Connection;
@@ -61,8 +62,7 @@ public class GestorArboles {
 				
 				try {
 					Connection con = DriverManager.getConnection("jdbc:mysql://" + HOST + "/" + BBDD, USERNAME, PASSWORD);
-					
-					Statement st = con.createStatement(); //Crear el ejecutor de sentencias
+					Statement st = con.createStatement();
 					st.execute("INSERT INTO arboles (nombre_comun, nombre_cientifico, habitad, altura, origen) VALUES ('" + nombreComun + "', '" + nombreCientifico + "', '" + habitat + "', '" + altura + "', '" + origen + "');");
 					con.close();
 					System.out.println("Árbol insertado!");
@@ -74,10 +74,10 @@ public class GestorArboles {
 			case ELIMINAR_ARBOL:
 				System.out.println("Escribe el ID del árbol que quieres eliminar: ");
 				int idArbol = Integer.parseInt(scan.nextLine());
+				
 				try {
 					Connection con = DriverManager.getConnection("jdbc:mysql://" + HOST + "/" + BBDD, USERNAME, PASSWORD);
-					
-					Statement st = con.createStatement(); //Crear el ejecutor de sentencias
+					Statement st = con.createStatement();
 					st.execute("DELETE FROM arboles WHERE id = '" + idArbol + "';");
 					con.close();
 					System.out.println("El árbol con el ID " + idArbol + " ha sido eliminado!");
@@ -87,11 +87,46 @@ public class GestorArboles {
 
 				break;
 			case MODIFICAR_INFOR:
-				System.out.println("Opcion escogida: " + MODIFICAR_INFOR + "\n");
+				System.out.println("Escribe el ID del árbol al que quieres modificar: ");
+				int idModifi = Integer.parseInt(scan.nextLine());
+				System.out.println("Escribe el nuevo nombre comun del árbol: ");
+				String nombreComunModifi = scan.nextLine();
+				System.out.println("Escribe el nuevo nombre cientifico del árbol: ");
+				String nombreCientificoModifi = scan.nextLine();
+				System.out.println("Escribe el nuevo habitat del árbol: ");
+				String habitatModifi = scan.nextLine();
+				System.out.println("Escribe la nueva altura del árbol: ");
+				int alturaModifi = Integer.parseInt(scan.nextLine());
+				System.out.println("Escribe el nuevo origen del árbol: ");
+				String origenModifi = scan.nextLine();
+				
+				try {
+					Connection con = DriverManager.getConnection("jdbc:mysql://" + HOST + "/" + BBDD, USERNAME, PASSWORD);
+					Statement st = con.createStatement();
+					st.execute("UPDATE arboles SET nombre_comun='" + nombreComunModifi + "', nombre_cientifico='" + nombreCientificoModifi + "', habitad='" + habitatModifi + "', altura='" + alturaModifi + "', origen='" + origenModifi + "' WHERE id = " + idModifi + ";");
+					con.close();
+					System.out.println("El árbol con el ID " + idModifi + " ha sido modificado!");
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
 
 				break;
 			case VISUALIZAR_ARBOLES:
-				System.out.println("Opcion escogida: " + VISUALIZAR_ARBOLES + "\n");
+				System.out.println("Lista de árboles: \n");
+				
+				try {
+					Connection con = DriverManager.getConnection("jdbc:mysql://" + HOST + "/" + BBDD, USERNAME, PASSWORD);
+					Statement st = con.createStatement();
+					String sentenciaSelect = "SELECT * FROM arboles;";
+					ResultSet resultado = st.executeQuery(sentenciaSelect);
+					System.out.println("ID - Nom Comun - Nom Cientifi - Habitad - Altura - Origen\n");
+					while(resultado.next()) {
+						System.out.println(resultado.getInt(1) + " - " + resultado.getString(2) + " - " + resultado.getString(2) + " - " + resultado.getString(4) + " - " + resultado.getInt(5) + " - " + resultado.getString(6));
+					}
+					con.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
 
 				break;
 			case SALIR:
