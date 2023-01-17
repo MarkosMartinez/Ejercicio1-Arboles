@@ -26,16 +26,6 @@ public class GestorArboles {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
-		try {
-			Connection con = DriverManager.getConnection("jdbc:mysql://" + HOST + "/" + BBDD, USERNAME, PASSWORD);
-			
-			Statement st = con.createStatement(); //Crear el ejecutor de sentencias
-			/*String sentenciaInsert = "INSERT INTO animales (nombre) VALUES ('Test');";
-			st.execute(sentenciaInsert);*/  //No es necesario ";" si solo es una linea.
-			con.close();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
 		
 		final int INSERTAR_ARBOL = 1;
 		final int ELIMINAR_ARBOL = 2;
@@ -57,9 +47,7 @@ public class GestorArboles {
 			opcion_menu = Integer.parseInt(scan.nextLine());
 
 			switch (opcion_menu) {
-			case INSERTAR_ARBOL:
-				System.out.println("Opcion escogida: " + INSERTAR_ARBOL + "\n");
-				
+			case INSERTAR_ARBOL:				
 				System.out.println("Escribe el nombre comun del árbol: ");
 				String nombreComun = scan.nextLine();
 				System.out.println("Escribe el nombre cientifico del árbol: ");
@@ -70,10 +58,32 @@ public class GestorArboles {
 				int altura = Integer.parseInt(scan.nextLine());
 				System.out.println("Escribe el origen del árbol: ");
 				String origen = scan.nextLine();
+				
+				try {
+					Connection con = DriverManager.getConnection("jdbc:mysql://" + HOST + "/" + BBDD, USERNAME, PASSWORD);
+					
+					Statement st = con.createStatement(); //Crear el ejecutor de sentencias
+					st.execute("INSERT INTO arboles (nombre_comun, nombre_cientifico, habitad, altura, origen) VALUES ('" + nombreComun + "', '" + nombreCientifico + "', '" + habitat + "', '" + altura + "', '" + origen + "');");
+					con.close();
+					System.out.println("Árbol insertado!");
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
 
 				break;
 			case ELIMINAR_ARBOL:
-				System.out.println("Opcion escogida: " + ELIMINAR_ARBOL + "\n");
+				System.out.println("Escribe el ID del árbol que quieres eliminar: ");
+				int idArbol = Integer.parseInt(scan.nextLine());
+				try {
+					Connection con = DriverManager.getConnection("jdbc:mysql://" + HOST + "/" + BBDD, USERNAME, PASSWORD);
+					
+					Statement st = con.createStatement(); //Crear el ejecutor de sentencias
+					st.execute("DELETE FROM arboles WHERE id = '" + idArbol + "';");
+					con.close();
+					System.out.println("El árbol con el ID " + idArbol + " ha sido eliminado!");
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
 
 				break;
 			case MODIFICAR_INFOR:
