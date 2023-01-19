@@ -73,18 +73,41 @@ public class GestorArboles {
 				System.out.println("Escribe el ID del árbol al que quieres modificar: ");
 				int idModifi = Integer.parseInt(scan.nextLine());
 				if(existe(idModifi)) {
-				System.out.println("Escribe el nuevo nombre comun del árbol: ");
-				String nombreComunModifi = scan.nextLine();
-				System.out.println("Escribe el nuevo nombre cientifico del árbol: ");
-				String nombreCientificoModifi = scan.nextLine();
-				System.out.println("Escribe el nuevo habitat del árbol: ");
-				String habitatModifi = scan.nextLine();
-				System.out.println("Escribe la nueva altura del árbol: ");
-				int alturaModifi = Integer.parseInt(scan.nextLine());
-				System.out.println("Escribe el nuevo origen del árbol: ");
-				String origenModifi = scan.nextLine();
+					
+					String sentenciaSelect = "SELECT * FROM arboles;";
+					ResultSet resultado = st.executeQuery(sentenciaSelect);
+					String nombreComunModifi = "";
+					String nombreCientificoModifi = "";
+					String habitatModifi = "";
+					String alturaModifi = "";
+					String origenModifi = "";
+					while(resultado.next()) {
+						if(resultado.getInt(1) == idModifi) {
+							
+							System.out.println("Escribe el nuevo nombre comun del árbol (" + resultado.getString(2) + "): ");
+							nombreComunModifi = scan.nextLine();
+							if(nombreComunModifi == "")
+								nombreComunModifi = resultado.getString(2);
+							System.out.println("Escribe el nuevo nombre cientifico del árbol (" + resultado.getString(3) + "): ");
+							nombreCientificoModifi = scan.nextLine();
+							if(nombreCientificoModifi == "")
+								nombreCientificoModifi = resultado.getString(3);
+							System.out.println("Escribe el nuevo habitat del árbol (" + resultado.getString(4) + "): ");
+							habitatModifi = scan.nextLine();
+							if(habitatModifi == "")
+								habitatModifi = resultado.getString(4);
+							System.out.println("Escribe la nueva altura del arbol (" + resultado.getInt(5) + "): ");
+							alturaModifi = scan.nextLine();
+							if(alturaModifi == "")
+								alturaModifi = resultado.getString(5);
+							System.out.println("Escribe el nuevo origen del árbol (" + resultado.getString(6) + "): ");
+							origenModifi = scan.nextLine();
+							if(origenModifi == "")
+								origenModifi = resultado.getString(6);
+					}
+					}
 				
-					st.execute("UPDATE arboles SET nombre_comun='" + nombreComunModifi + "', nombre_cientifico='" + nombreCientificoModifi + "', habitad='" + habitatModifi + "', altura='" + alturaModifi + "', origen='" + origenModifi + "' WHERE id = " + idModifi + ";");
+					st.execute("UPDATE arboles SET nombre_comun='" + nombreComunModifi + "', nombre_cientifico='" + nombreCientificoModifi + "', habitad='" + habitatModifi + "', altura='" + Integer.parseInt(alturaModifi) + "', origen='" + origenModifi + "' WHERE id = " + idModifi + ";");
 					con.close();
 					st.close();
 					System.out.println("El árbol con el ID " + idModifi + " ha sido modificado!");
