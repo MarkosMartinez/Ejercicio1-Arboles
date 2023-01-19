@@ -2,6 +2,7 @@ package clases;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -51,9 +52,14 @@ public class GestorArboles {
 				System.out.println("Escribe el origen del árbol: ");
 				String origen = scan.nextLine();
 				
-					st.execute("INSERT INTO arboles (nombre_comun, nombre_cientifico, habitad, altura, origen) VALUES ('" + nombreComun + "', '" + nombreCientifico + "', '" + habitat + "', '" + altura + "', '" + origen + "');");
+					PreparedStatement insert = con.prepareStatement("INSERT INTO arboles (nombre_comun, nombre_cientifico, habitad, altura, origen) VALUES (?, ?, ?, ?, ?);");
+					insert.setString(1, nombreComun);
+					insert.setString(2, nombreCientifico);
+					insert.setString(3, habitat);
+					insert.setInt(4, altura);
+					insert.setString(5, origen);
+					insert.execute();
 					con.close();
-					st.close();
 					System.out.println("Árbol insertado!");
 
 				break;
@@ -61,7 +67,9 @@ public class GestorArboles {
 				System.out.println("Escribe el ID del árbol que quieres eliminar: ");
 				int idArbol = Integer.parseInt(scan.nextLine());
 				if(existe(idArbol)) {
-					st.execute("DELETE FROM arboles WHERE id = '" + idArbol + "';");
+					PreparedStatement delete = con.prepareStatement("DELETE FROM arboles WHERE id = ?;");
+					delete.setInt(1, idArbol);
+					delete.execute();
 					con.close();
 					System.out.println("El árbol con el ID " + idArbol + " ha sido eliminado!");
 				}else {
@@ -107,9 +115,14 @@ public class GestorArboles {
 					}
 					}
 				
-					st.execute("UPDATE arboles SET nombre_comun='" + nombreComunModifi + "', nombre_cientifico='" + nombreCientificoModifi + "', habitad='" + habitatModifi + "', altura='" + Integer.parseInt(alturaModifi) + "', origen='" + origenModifi + "' WHERE id = " + idModifi + ";");
+					PreparedStatement modify = con.prepareStatement("UPDATE arboles SET nombre_comun= ?, nombre_cientifico= ?, habitad= ?, altura= ?, origen= ? WHERE id = ?;");
+					modify.setString(1, nombreComunModifi);
+					modify.setString(2, nombreCientificoModifi);
+					modify.setString(3, habitatModifi);
+					modify.setInt(4, Integer.parseInt(alturaModifi));
+					modify.setString(5, origenModifi);
+					modify.setInt(6, idModifi );
 					con.close();
-					st.close();
 					System.out.println("El árbol con el ID " + idModifi + " ha sido modificado!");
 				}else {
 					System.out.println("No puedo modificar ese arbol porque no existe.");
