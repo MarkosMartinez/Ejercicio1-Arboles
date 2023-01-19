@@ -19,14 +19,8 @@ public class GestorArboles {
 	private static final String USERNAME = "root";
 	private static final String PASSWORD = "";
 	
-	public void run() {
-	
-		try {
+	public void run() throws ClassNotFoundException, SQLException {
 			Class.forName("com.mysql.cj.jdbc.Driver");
-		} catch (ClassNotFoundException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
 		
 		final int INSERTAR_ARBOL = 1;
 		final int ELIMINAR_ARBOL = 2;
@@ -46,6 +40,8 @@ public class GestorArboles {
 			System.out.println(SALIR + ". Salir");
 			System.out.println("Elije una de las opciones");
 			opcion_menu = Integer.parseInt(scan.nextLine());
+			Connection con = DriverManager.getConnection("jdbc:mysql://" + HOST + "/" + BBDD, USERNAME, PASSWORD);
+			Statement st = con.createStatement();
 
 			switch (opcion_menu) {
 			case INSERTAR_ARBOL:				
@@ -60,15 +56,10 @@ public class GestorArboles {
 				System.out.println("Escribe el origen del árbol: ");
 				String origen = scan.nextLine();
 				
-				try {
-					Connection con = DriverManager.getConnection("jdbc:mysql://" + HOST + "/" + BBDD, USERNAME, PASSWORD);
-					Statement st = con.createStatement();
 					st.execute("INSERT INTO arboles (nombre_comun, nombre_cientifico, habitad, altura, origen) VALUES ('" + nombreComun + "', '" + nombreCientifico + "', '" + habitat + "', '" + altura + "', '" + origen + "');");
 					con.close();
+					st.close();
 					System.out.println("Árbol insertado!");
-				} catch (SQLException e) {
-					e.printStackTrace();
-				}
 
 				break;
 			case ELIMINAR_ARBOL:
@@ -76,8 +67,7 @@ public class GestorArboles {
 				int idArbol = Integer.parseInt(scan.nextLine());
 				
 				try {
-					Connection con = DriverManager.getConnection("jdbc:mysql://" + HOST + "/" + BBDD, USERNAME, PASSWORD);
-					Statement st = con.createStatement();
+					
 					st.execute("DELETE FROM arboles WHERE id = '" + idArbol + "';");
 					con.close();
 					System.out.println("El árbol con el ID " + idArbol + " ha sido eliminado!");
@@ -100,33 +90,23 @@ public class GestorArboles {
 				System.out.println("Escribe el nuevo origen del árbol: ");
 				String origenModifi = scan.nextLine();
 				
-				try {
-					Connection con = DriverManager.getConnection("jdbc:mysql://" + HOST + "/" + BBDD, USERNAME, PASSWORD);
-					Statement st = con.createStatement();
 					st.execute("UPDATE arboles SET nombre_comun='" + nombreComunModifi + "', nombre_cientifico='" + nombreCientificoModifi + "', habitad='" + habitatModifi + "', altura='" + alturaModifi + "', origen='" + origenModifi + "' WHERE id = " + idModifi + ";");
 					con.close();
+					st.close();
 					System.out.println("El árbol con el ID " + idModifi + " ha sido modificado!");
-				} catch (SQLException e) {
-					e.printStackTrace();
-				}
 
 				break;
 			case VISUALIZAR_ARBOLES:
 				System.out.println("Lista de árboles: \n");
 				
-				try {
-					Connection con = DriverManager.getConnection("jdbc:mysql://" + HOST + "/" + BBDD, USERNAME, PASSWORD);
-					Statement st = con.createStatement();
 					String sentenciaSelect = "SELECT * FROM arboles;";
 					ResultSet resultado = st.executeQuery(sentenciaSelect);
 					System.out.println("ID - Nom Comun - Nom Cientifi - Habitad - Altura - Origen\n");
 					while(resultado.next()) {
-						System.out.println(resultado.getInt(1) + " - " + resultado.getString(2) + " - " + resultado.getString(2) + " - " + resultado.getString(4) + " - " + resultado.getInt(5) + " - " + resultado.getString(6));
+						System.out.println(resultado.getInt(1) + " - " + resultado.getString(2) + " - " + resultado.getString(3) + " - " + resultado.getString(4) + " - " + resultado.getInt(5) + " - " + resultado.getString(6));
 					}
 					con.close();
-				} catch (SQLException e) {
-					e.printStackTrace();
-				}
+					st.close();
 
 				break;
 			case SALIR:
