@@ -5,11 +5,6 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-/*import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;*/
 import java.util.Scanner;
 
 public class GestorArboles {
@@ -65,20 +60,19 @@ public class GestorArboles {
 			case ELIMINAR_ARBOL:
 				System.out.println("Escribe el ID del árbol que quieres eliminar: ");
 				int idArbol = Integer.parseInt(scan.nextLine());
-				
-				try {
-					
+				if(existe(idArbol)) {
 					st.execute("DELETE FROM arboles WHERE id = '" + idArbol + "';");
 					con.close();
 					System.out.println("El árbol con el ID " + idArbol + " ha sido eliminado!");
-				} catch (SQLException e) {
-					e.printStackTrace();
+				}else {
+					System.out.println("No puedo eliminar ese arbol porque no existe!");
 				}
 
 				break;
 			case MODIFICAR_INFOR:
 				System.out.println("Escribe el ID del árbol al que quieres modificar: ");
 				int idModifi = Integer.parseInt(scan.nextLine());
+				if(existe(idModifi)) {
 				System.out.println("Escribe el nuevo nombre comun del árbol: ");
 				String nombreComunModifi = scan.nextLine();
 				System.out.println("Escribe el nuevo nombre cientifico del árbol: ");
@@ -94,6 +88,9 @@ public class GestorArboles {
 					con.close();
 					st.close();
 					System.out.println("El árbol con el ID " + idModifi + " ha sido modificado!");
+				}else {
+					System.out.println("No puedo modificar ese arbol porque no existe.");
+				}
 
 				break;
 			case VISUALIZAR_ARBOLES:
@@ -119,6 +116,23 @@ public class GestorArboles {
 		} while (opcion_menu != SALIR);
 		scan.close();
 		
+	}
+	
+	public boolean existe(int id) throws SQLException {
+		Connection con = DriverManager.getConnection("jdbc:mysql://" + HOST + "/" + BBDD, USERNAME, PASSWORD);
+		Statement st = con.createStatement();
+		boolean existe = false;
+	
+		String sentenciaSelect = "SELECT * FROM arboles;";
+		ResultSet resultado = st.executeQuery(sentenciaSelect);
+		while(resultado.next()) {
+			if(resultado.getInt(1) == id)
+				existe = true;
+		}
+		con.close();
+		st.close();
+		
+		return existe;
 	}
 	
 }
