@@ -37,7 +37,6 @@ public class GestorArboles {
 			System.out.println("Elije una de las opciones");
 			opcion_menu = Integer.parseInt(scan.nextLine());
 			Connection con = DriverManager.getConnection("jdbc:mysql://" + HOST + "/" + BBDD, USERNAME, PASSWORD);
-			Statement st = con.createStatement();
 
 			switch (opcion_menu) {
 			case INSERTAR_ARBOL:				
@@ -81,9 +80,9 @@ public class GestorArboles {
 				System.out.println("Escribe el ID del árbol al que quieres modificar: ");
 				int idModifi = Integer.parseInt(scan.nextLine());
 				if(existe(idModifi)) {
-					
-					String sentenciaSelect = "SELECT * FROM arboles;";
-					ResultSet resultado = st.executeQuery(sentenciaSelect);
+					PreparedStatement sentenciaSelect = con.prepareStatement("SELECT * FROM arboles;");
+					sentenciaSelect.execute();
+					ResultSet resultado = sentenciaSelect.executeQuery();
 					String nombreComunModifi = "";
 					String nombreCientificoModifi = "";
 					String habitatModifi = "";
@@ -122,6 +121,7 @@ public class GestorArboles {
 					modify.setInt(4, Integer.parseInt(alturaModifi));
 					modify.setString(5, origenModifi);
 					modify.setInt(6, idModifi );
+					modify.execute();
 					con.close();
 					System.out.println("El árbol con el ID " + idModifi + " ha sido modificado!");
 				}else {
@@ -131,15 +131,14 @@ public class GestorArboles {
 				break;
 			case VISUALIZAR_ARBOLES:
 				System.out.println("Lista de árboles: \n");
-				
-					String sentenciaSelect = "SELECT * FROM arboles;";
-					ResultSet resultado = st.executeQuery(sentenciaSelect);
+					PreparedStatement listar = con.prepareStatement("SELECT * FROM arboles;");
+					listar.execute();
+					ResultSet resultado = listar.executeQuery();
 					System.out.println("ID - Nom Comun - Nom Cientifi - Habitad - Altura - Origen\n");
 					while(resultado.next()) {
 						System.out.println(resultado.getInt(1) + " - " + resultado.getString(2) + " - " + resultado.getString(3) + " - " + resultado.getString(4) + " - " + resultado.getInt(5) + " - " + resultado.getString(6));
 					}
 					con.close();
-					st.close();
 
 				break;
 			case SALIR:
