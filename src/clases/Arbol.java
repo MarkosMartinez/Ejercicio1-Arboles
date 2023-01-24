@@ -71,4 +71,8 @@ public class Arbol {
 		this.origen = origen;
 	};
 	
+	public String toString() {
+		return id + " - " + nombreComun + " - " + nombreCientifico + " - " + habitat + " - " + altura + " - " + origen;
+	}
+	
 }
