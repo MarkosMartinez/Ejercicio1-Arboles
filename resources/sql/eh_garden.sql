@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 17-01-2023 a las 14:04:10
+-- Tiempo de generación: 24-01-2023 a las 08:45:34
 -- Versión del servidor: 10.4.27-MariaDB
 -- Versión de PHP: 8.2.0
 
@@ -41,7 +41,7 @@ CREATE TABLE `arboles` (
 --
 
 INSERT INTO `arboles` (`id`, `nombre_comun`, `nombre_cientifico`, `habitad`, `altura`, `origen`) VALUES
-(1, 'Prueba común', 'Prueba científico', 'humedal', 1, 'asia');
+(1, 'Prueba común', 'Prueba científico', 'Humedal', 1, 'Asia');
 
 --
 -- Índices para tablas volcadas
@@ -61,7 +61,7 @@ ALTER TABLE `arboles`
 -- AUTO_INCREMENT de la tabla `arboles`
 --
 ALTER TABLE `arboles`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
