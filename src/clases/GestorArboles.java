@@ -68,6 +68,7 @@ public class GestorArboles {
 				arbol = new Arbol();
 				System.out.println("Escribe el ID del árbol que quieres eliminar: ");
 				arbol.setId(Integer.parseInt(scan.nextLine()));
+				
 				if(existe(arbol.getId())) {
 					PreparedStatement delete = con.prepareStatement("DELETE FROM arboles WHERE id = ?;");
 					delete.setInt(1, arbol.getId());
@@ -87,11 +88,6 @@ public class GestorArboles {
 					PreparedStatement sentenciaSelect = con.prepareStatement("SELECT * FROM arboles;");
 					sentenciaSelect.execute();
 					ResultSet resultado = sentenciaSelect.executeQuery();
-//					String nombreComunModifi = "";
-//					String nombreCientificoModifi = "";
-//					String habitatModifi = "";
-//					String alturaModifi = "";
-//					String origenModifi = "";
 					while(resultado.next()) {
 						if(resultado.getInt(1) == arbol.getId()) {
 							
@@ -178,18 +174,17 @@ public class GestorArboles {
 	public boolean existe(int id) throws SQLException {
 		Connection con = DriverManager.getConnection("jdbc:mysql://" + HOST + "/" + BBDD, USERNAME, PASSWORD);
 		Statement st = con.createStatement();
-		boolean existe = false;
 	
 		String sentenciaSelect = "SELECT * FROM arboles;";
 		ResultSet resultado = st.executeQuery(sentenciaSelect);
 		while(resultado.next()) {
 			if(resultado.getInt(1) == id)
-				existe = true;
+				return true;
 		}
 		st.close();
 		con.close();
 		
-		return existe;
+		return false;
 	}
 	
 }
